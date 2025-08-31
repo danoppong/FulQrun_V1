@@ -1,42 +1,58 @@
+import { redirect } from 'next/navigation'
+import { currentUser } from '@clerk/nextjs/server'
+import { createClient } from '@/lib/supabase/server'
 import { DashboardLayout } from '@/components/layout/dashboard-layout'
 import { RepDashboard } from '@/components/dashboards/rep-dashboard'
-import { Button } from '@/components/ui/button'
-import Link from 'next/link'
+import { ManagerDashboard } from '@/components/dashboards/manager-dashboard'
+import { AdminDashboard } from '@/components/dashboards/admin-dashboard'
 
-export default function DashboardPage() {
-  // Demo mode - show all dashboard types
+export default async function DashboardPage() {
+  const user = await currentUser()
+  
+  if (!user) {
+    redirect('/sign-in')
+  }
+
+  const supabase = await createClient()
+  
+  // Check if user exists in our database
+  const { data: dbUser } = await supabase
+    .from('users')
+    .select('*, organizations(*)')
+    .eq('clerk_id', user.id)
+    .single()
+
+  // If user doesn't exist, redirect to onboarding
+  if (!dbUser) {
+    redirect('/onboarding')
+  }
+
+  const renderDashboard = () => {
+    switch (dbUser.role) {
+      case 'manager':
+        return <ManagerDashboard />
+      case 'admin':
+        return <AdminDashboard />
+      default:
+        return <RepDashboard />
+    }
+  }
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        {/* Demo Notice */}
-        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-          <h2 className="text-lg font-semibold text-green-800">🎉 Welcome to FulQrun Demo!</h2>
-          <p className="text-sm text-green-700 mb-3">
-            You&apos;re now viewing the complete sales operations platform. Explore all features with interactive demo data.
-          </p>
-          <div className="flex gap-2">
-            <Link href="/leads">
-              <Button size="sm" variant="outline">View Leads</Button>
-            </Link>
-            <Link href="/opportunities">
-              <Button size="sm" variant="outline">View Opportunities</Button>
-            </Link>
-            <Link href="/analytics">
-              <Button size="sm" variant="outline">View Analytics</Button>
-            </Link>
-          </div>
-        </div>
-
-        {/* Header */}
+        {/* Welcome Header */}
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Sales Dashboard</h1>
+          <h1 className="text-3xl font-bold text-foreground">
+            Welcome back, {user.firstName}!
+          </h1>
           <p className="text-muted-foreground">
-            Your complete sales operations command center
+            {dbUser.organizations?.name} • {dbUser.role} • {dbUser.territory || 'No territory assigned'}
           </p>
         </div>
 
-        {/* Default to Rep Dashboard for demo */}
-        <RepDashboard />
+        {/* Role-based Dashboard Content */}
+        {renderDashboard()}
       </div>
     </DashboardLayout>
   )

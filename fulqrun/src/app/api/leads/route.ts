@@ -1,36 +1,40 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { auth } from '@clerk/nextjs/server'
+import { createClient } from '@/lib/supabase/server'
 
 export async function GET(_request: NextRequest) {
   try {
-    // Demo mode - return mock data
-    const mockLeads = [
-      {
-        id: '1',
-        first_name: 'John',
-        last_name: 'Smith',
-        email: 'john.smith@techcorp.com',
-        company_name: 'TechCorp Inc',
-        title: 'VP of Sales',
-        source: 'Website',
-        score: 85,
-        status: 'qualified',
-        created_at: '2024-01-15'
-      },
-      {
-        id: '2', 
-        first_name: 'Sarah',
-        last_name: 'Johnson',
-        email: 'sarah.j@innovate.com',
-        company_name: 'Innovate Solutions',
-        title: 'CTO',
-        source: 'Referral',
-        score: 92,
-        status: 'contacted',
-        created_at: '2024-01-14'
-      }
-    ]
+    const { userId } = await auth()
+    
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
 
-    return NextResponse.json({ leads: mockLeads })
+    const supabase = await createClient()
+    
+    // Get user's organization
+    const { data: user } = await supabase
+      .from('users')
+      .select('organization_id')
+      .eq('clerk_id', userId)
+      .single()
+
+    if (!user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 })
+    }
+
+    // Get leads for the organization
+    const { data: leads, error } = await supabase
+      .from('leads')
+      .select('*')
+      .eq('organization_id', user.organization_id)
+      .order('created_at', { ascending: false })
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+
+    return NextResponse.json({ leads })
   } catch (_error) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
@@ -38,18 +42,48 @@ export async function GET(_request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json()
+    const { userId } = await auth()
     
-    // Demo mode - simulate lead creation
-    const newLead = {
-      id: Date.now().toString(),
-      ...body,
-      created_at: new Date().toISOString(),
-      organization_id: 'demo-org',
-      created_by: 'demo-user'
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    return NextResponse.json({ lead: newLead }, { status: 201 })
+    const body = await request.json()
+    const supabase = await createClient()
+    
+    // Get user's organization
+    const { data: user } = await supabase
+      .from('users')
+      .select('organization_id, id')
+      .eq('clerk_id', userId)
+      .single()
+
+    if (!user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 })
+    }
+
+    // Calculate lead score
+    const { LeadScoringService } = await import('@/lib/services/lead-scoring')
+    const score = LeadScoringService.calculateScore(body)
+
+    // Create lead
+    const { data: lead, error } = await supabase
+      .from('leads')
+      .insert({
+        ...body,
+        score,
+        organization_id: user.organization_id,
+        created_by: user.id,
+        assigned_to: user.id
+      })
+      .select()
+      .single()
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+
+    return NextResponse.json({ lead }, { status: 201 })
   } catch (_error) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { DashboardLayout } from '@/components/layout/dashboard-layout'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -63,8 +63,41 @@ const getStatusColor = (status: string) => {
 export default function LeadsPage() {
   const [isAddLeadModalOpen, setIsAddLeadModalOpen] = useState(false)
   const [leadsData, setLeadsData] = useState(leads)
+  const [isLoading, setIsLoading] = useState(true)
 
-  const handleLeadAdded = (newLead: {
+  // Fetch real leads data
+  useEffect(() => {
+    const fetchLeads = async () => {
+      try {
+        const response = await fetch('/api/leads')
+        if (response.ok) {
+          const data = await response.json()
+          // Transform API data to match UI format
+          const transformedLeads = data.leads.map((lead: any) => ({
+            id: lead.id,
+            name: `${lead.first_name} ${lead.last_name}`,
+            email: lead.email,
+            company: lead.company_name,
+            title: lead.title,
+            source: lead.source,
+            score: lead.score,
+            status: lead.status,
+            createdAt: new Date(lead.created_at).toISOString().split('T')[0]
+          }))
+          setLeadsData(transformedLeads)
+        }
+      } catch (error) {
+        console.error('Error fetching leads:', error)
+        // Keep mock data if API fails
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchLeads()
+  }, [])
+
+  const handleLeadAdded = async (newLead: {
     first_name: string
     last_name: string
     email: string
@@ -73,18 +106,33 @@ export default function LeadsPage() {
     source: string
     score: number
   }) => {
-    const lead = {
-      id: Date.now().toString(),
-      name: `${newLead.first_name} ${newLead.last_name}`,
-      email: newLead.email,
-      company: newLead.company_name,
-      title: newLead.title,
-      source: newLead.source,
-      score: newLead.score,
-      status: newLead.score >= 70 ? 'qualified' : newLead.score >= 40 ? 'contacted' : 'new',
-      createdAt: new Date().toISOString().split('T')[0]
+    try {
+      // Send to API
+      const response = await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newLead)
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        // Add to local state for immediate UI update
+        const lead = {
+          id: data.lead.id,
+          name: `${newLead.first_name} ${newLead.last_name}`,
+          email: newLead.email,
+          company: newLead.company_name,
+          title: newLead.title,
+          source: newLead.source,
+          score: newLead.score,
+          status: newLead.score >= 70 ? 'qualified' : newLead.score >= 40 ? 'contacted' : 'new',
+          createdAt: new Date().toISOString().split('T')[0]
+        }
+        setLeadsData(prev => [lead, ...prev])
+      }
+    } catch (error) {
+      console.error('Error adding lead:', error)
     }
-    setLeadsData(prev => [lead, ...prev])
   }
   return (
     <DashboardLayout>
@@ -175,7 +223,15 @@ export default function LeadsPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {leadsData.map((lead) => (
+              {isLoading ? (
+                <div className="flex items-center justify-center py-8">
+                  <div className="text-center">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
+                    <p className="text-sm text-muted-foreground">Loading leads...</p>
+                  </div>
+                </div>
+              ) : leadsData.length > 0 ? (
+                leadsData.map((lead) => (
                 <div key={lead.id} className="flex items-center justify-between border-b pb-4 last:border-b-0">
                   <div className="flex-1">
                     <div className="flex items-center gap-3">
@@ -207,7 +263,12 @@ export default function LeadsPage() {
                     </Button>
                   </div>
                 </div>
-              ))}
+                ))
+              ) : (
+                <div className="text-center py-8">
+                  <p className="text-muted-foreground">No leads found. Add your first lead to get started!</p>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
