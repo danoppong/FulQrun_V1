@@ -1,7 +1,6 @@
 'use client'
 
-import { UserButton } from '@clerk/nextjs'
-import { Bell } from 'lucide-react'
+import { Bell, User } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { GlobalSearch } from '@/components/search/global-search'
 
@@ -16,7 +15,12 @@ export function Header() {
         <Button variant="ghost" size="icon">
           <Bell className="h-4 w-4" />
         </Button>
-        <UserButton afterSignOutUrl="/" />
+        <Button variant="ghost" size="icon">
+          <User className="h-4 w-4" />
+        </Button>
+        <div className="text-sm">
+          <p className="font-medium">Demo User</p>
+        </div>
       </div>
     </header>
   )

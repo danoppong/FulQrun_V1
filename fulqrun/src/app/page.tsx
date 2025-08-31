@@ -18,14 +18,14 @@ export default function Home() {
           </p>
           
           <div className="flex gap-4 justify-center mb-12">
-            <Link href="/demo">
+            <Link href="/demo-dashboard">
               <Button size="lg" className="text-lg px-8 py-6">
                 View Live Demo
               </Button>
             </Link>
-            <Link href="/sign-up">
+            <Link href="/demo">
               <Button variant="outline" size="lg" className="text-lg px-8 py-6">
-                Get Started
+                Feature Overview
               </Button>
             </Link>
           </div>
