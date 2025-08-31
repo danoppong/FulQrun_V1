@@ -7,7 +7,7 @@ import { GlobalSearch } from '@/components/search/global-search'
 import { usePathname } from 'next/navigation'
 
 export function Header() {
-  const { isSignedIn, user } = useUser()
+  const { isSignedIn } = useUser()
   const pathname = usePathname()
   const isDemoMode = pathname?.startsWith('/demo')
 

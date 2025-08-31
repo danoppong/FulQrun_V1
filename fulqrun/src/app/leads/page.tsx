@@ -73,7 +73,18 @@ export default function LeadsPage() {
         if (response.ok) {
           const data = await response.json()
           // Transform API data to match UI format
-          const transformedLeads = data.leads.map((lead: any) => ({
+          const transformedLeads = data.leads.map((lead: {
+            id: string
+            first_name: string
+            last_name: string
+            email: string
+            company_name: string
+            title: string
+            source: string
+            score: number
+            status: string
+            created_at: string
+          }) => ({
             id: lead.id,
             name: `${lead.first_name} ${lead.last_name}`,
             email: lead.email,

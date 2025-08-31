@@ -122,7 +122,7 @@ export default function OnboardingPage() {
           <CardHeader>
             <CardTitle>Welcome to FulQrun!</CardTitle>
             <CardDescription>
-              Let's set up your sales operations platform in just a few steps
+              Let&apos;s set up your sales operations platform in just a few steps
             </CardDescription>
           </CardHeader>
           <CardContent>
