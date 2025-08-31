@@ -13,17 +13,25 @@ import {
   Users, 
   Settings,
   TrendingUp,
-  User
+  User,
+  GitBranch,
+  Brain,
+  Zap,
+  GraduationCap
 } from 'lucide-react'
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: Home },
   { name: 'Leads', href: '/leads', icon: Users },
   { name: 'Opportunities', href: '/opportunities', icon: Target },
+  { name: 'Pipeline Builder', href: '/pipeline', icon: GitBranch },
   { name: 'Contacts', href: '/contacts', icon: Contact },
   { name: 'Companies', href: '/companies', icon: Building2 },
   { name: 'Analytics', href: '/analytics', icon: BarChart3 },
+  { name: 'AI Insights', href: '/ai-insights', icon: Brain },
   { name: 'Performance', href: '/performance', icon: TrendingUp },
+  { name: 'Integrations', href: '/integrations', icon: Zap },
+  { name: 'Learning', href: '/learning', icon: GraduationCap },
   { name: 'Profile', href: '/profile', icon: User },
   { name: 'Settings', href: '/settings', icon: Settings },
 ]
