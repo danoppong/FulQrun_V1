@@ -1,0 +1,11 @@
+node_modules
+.next
+.vercel
+.turbo
+dist
+build
+.DS_Store
+.env
+.env.*
+.env.local
+pnpm-lock.yaml
