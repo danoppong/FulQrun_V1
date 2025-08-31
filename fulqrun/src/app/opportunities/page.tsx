@@ -1,7 +1,11 @@
+'use client'
+
+import { useState } from 'react'
 import { DashboardLayout } from '@/components/layout/dashboard-layout'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { AddOpportunityModal } from '@/components/modals/add-opportunity-modal'
 import { Plus, Search, Filter, Target } from 'lucide-react'
 
 // Mock data for MVP demonstration
@@ -93,6 +97,45 @@ const getMeddpiccScore = (meddpicc: {
 }
 
 export default function OpportunitiesPage() {
+  const [isAddOpportunityModalOpen, setIsAddOpportunityModalOpen] = useState(false)
+  const [opportunitiesData, setOpportunitiesData] = useState(opportunities)
+
+  const handleOpportunityAdded = (newOpportunity: {
+    name: string
+    company_name: string
+    value: number
+    peak_stage: 'prospect' | 'engage' | 'acquire' | 'keep'
+    stage: string
+    expected_close_date: string
+    metrics: string
+    economic_buyer: string
+    champion: string
+    decision_criteria: string
+    decision_process: string
+    identify_pain: string
+  }) => {
+    const opportunity = {
+      id: Date.now().toString(),
+      name: newOpportunity.name,
+      company: newOpportunity.company_name,
+      value: newOpportunity.value,
+      peakStage: newOpportunity.peak_stage,
+      stage: newOpportunity.stage,
+      probability: newOpportunity.peak_stage === 'prospect' ? 10 : 
+                   newOpportunity.peak_stage === 'engage' ? 40 :
+                   newOpportunity.peak_stage === 'acquire' ? 70 : 90,
+      closeDate: newOpportunity.expected_close_date,
+      meddpicc: {
+        metrics: newOpportunity.metrics,
+        economicBuyer: newOpportunity.economic_buyer,
+        champion: newOpportunity.champion,
+        hasDecisionCriteria: !!newOpportunity.decision_criteria,
+        hasDecisionProcess: !!newOpportunity.decision_process,
+        painIdentified: !!newOpportunity.identify_pain
+      }
+    }
+    setOpportunitiesData(prev => [opportunity, ...prev])
+  }
   return (
     <DashboardLayout>
       <div className="space-y-6">
@@ -104,7 +147,7 @@ export default function OpportunitiesPage() {
               Manage your sales pipeline with PEAK methodology and MEDDPICC qualification
             </p>
           </div>
-          <Button>
+          <Button onClick={() => setIsAddOpportunityModalOpen(true)}>
             <Plus className="mr-2 h-4 w-4" />
             Add Opportunity
           </Button>
@@ -189,7 +232,7 @@ export default function OpportunitiesPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {opportunities.map((opp) => {
+              {opportunitiesData.map((opp) => {
                 const meddpiccScore = getMeddpiccScore(opp.meddpicc)
                 return (
                   <div key={opp.id} className="border rounded-lg p-4">
@@ -252,6 +295,13 @@ export default function OpportunitiesPage() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Add Opportunity Modal */}
+        <AddOpportunityModal
+          open={isAddOpportunityModalOpen}
+          onOpenChange={setIsAddOpportunityModalOpen}
+          onOpportunityAdded={handleOpportunityAdded}
+        />
       </div>
     </DashboardLayout>
   )

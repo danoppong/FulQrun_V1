@@ -1,7 +1,11 @@
+'use client'
+
+import { useState } from 'react'
 import { DashboardLayout } from '@/components/layout/dashboard-layout'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { AddLeadModal } from '@/components/modals/add-lead-modal'
 import { Plus, Search, Filter } from 'lucide-react'
 
 // Mock data for MVP demonstration
@@ -57,6 +61,31 @@ const getStatusColor = (status: string) => {
 }
 
 export default function LeadsPage() {
+  const [isAddLeadModalOpen, setIsAddLeadModalOpen] = useState(false)
+  const [leadsData, setLeadsData] = useState(leads)
+
+  const handleLeadAdded = (newLead: {
+    first_name: string
+    last_name: string
+    email: string
+    company_name: string
+    title: string
+    source: string
+    score: number
+  }) => {
+    const lead = {
+      id: Date.now().toString(),
+      name: `${newLead.first_name} ${newLead.last_name}`,
+      email: newLead.email,
+      company: newLead.company_name,
+      title: newLead.title,
+      source: newLead.source,
+      score: newLead.score,
+      status: newLead.score >= 70 ? 'qualified' : newLead.score >= 40 ? 'contacted' : 'new',
+      createdAt: new Date().toISOString().split('T')[0]
+    }
+    setLeadsData(prev => [lead, ...prev])
+  }
   return (
     <DashboardLayout>
       <div className="space-y-6">
@@ -68,7 +97,7 @@ export default function LeadsPage() {
               Manage and qualify your sales leads
             </p>
           </div>
-          <Button>
+          <Button onClick={() => setIsAddLeadModalOpen(true)}>
             <Plus className="mr-2 h-4 w-4" />
             Add Lead
           </Button>
@@ -146,7 +175,7 @@ export default function LeadsPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {leads.map((lead) => (
+              {leadsData.map((lead) => (
                 <div key={lead.id} className="flex items-center justify-between border-b pb-4 last:border-b-0">
                   <div className="flex-1">
                     <div className="flex items-center gap-3">
@@ -182,6 +211,13 @@ export default function LeadsPage() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Add Lead Modal */}
+        <AddLeadModal
+          open={isAddLeadModalOpen}
+          onOpenChange={setIsAddLeadModalOpen}
+          onLeadAdded={handleLeadAdded}
+        />
       </div>
     </DashboardLayout>
   )

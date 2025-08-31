@@ -12,7 +12,8 @@ import {
   Target, 
   Users, 
   Settings,
-  TrendingUp
+  TrendingUp,
+  User
 } from 'lucide-react'
 
 const navigation = [
@@ -23,6 +24,7 @@ const navigation = [
   { name: 'Companies', href: '/companies', icon: Building2 },
   { name: 'Analytics', href: '/analytics', icon: BarChart3 },
   { name: 'Performance', href: '/performance', icon: TrendingUp },
+  { name: 'Profile', href: '/profile', icon: User },
   { name: 'Settings', href: '/settings', icon: Settings },
 ]
 
