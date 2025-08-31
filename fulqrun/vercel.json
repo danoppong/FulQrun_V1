@@ -3,22 +3,32 @@
   "buildCommand": "npm run build",
   "devCommand": "npm run dev",
   "installCommand": "npm install",
-  "env": {
-    "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY": "@clerk_publishable_key",
-    "CLERK_SECRET_KEY": "@clerk_secret_key",
-    "NEXT_PUBLIC_SUPABASE_URL": "@supabase_url",
-    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "@supabase_anon_key",
-    "SUPABASE_SERVICE_ROLE_KEY": "@supabase_service_role_key",
-    "MICROSOFT_CLIENT_ID": "@microsoft_client_id",
-    "MICROSOFT_CLIENT_SECRET": "@microsoft_client_secret",
-    "MICROSOFT_TENANT_ID": "@microsoft_tenant_id",
-    "QUICKBOOKS_CLIENT_ID": "@quickbooks_client_id",
-    "QUICKBOOKS_CLIENT_SECRET": "@quickbooks_client_secret"
-  },
   "regions": ["iad1"],
   "functions": {
     "src/app/api/**/*.ts": {
       "maxDuration": 30
     }
-  }
+  },
+  "env": {
+    "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY": "pk_test_demo_key_for_preview",
+    "CLERK_SECRET_KEY": "sk_test_demo_key_for_preview",
+    "NEXT_PUBLIC_CLERK_SIGN_IN_URL": "/sign-in",
+    "NEXT_PUBLIC_CLERK_SIGN_UP_URL": "/sign-up", 
+    "NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL": "/dashboard",
+    "NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL": "/dashboard",
+    "NEXT_PUBLIC_APP_URL": "https://fulqrun-demo.vercel.app"
+  },
+  "redirects": [
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "cookie",
+          "key": "__session"
+        }
+      ],
+      "destination": "/dashboard",
+      "permanent": false
+    }
+  ]
 }
