@@ -1,16 +1,17 @@
 'use client'
 
-import { useUser, UserButton } from '@clerk/nextjs'
+import { UserButton } from '@clerk/nextjs'
 import { Bell, User } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { GlobalSearch } from '@/components/search/global-search'
 import { ThemeToggle } from '@/components/theme/theme-toggle'
+import { useAuth } from '@/components/providers/auth-provider'
 import { usePathname } from 'next/navigation'
 
 export function Header() {
-  const { isSignedIn } = useUser()
+  const { isSignedIn, isDemo } = useAuth()
   const pathname = usePathname()
-  const isDemoMode = pathname?.startsWith('/demo')
+  const isDemoMode = pathname?.startsWith('/demo') || isDemo
 
   return (
     <header className="flex h-16 items-center justify-between border-b bg-background px-6">

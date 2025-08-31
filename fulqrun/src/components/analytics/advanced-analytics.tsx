@@ -70,7 +70,7 @@ export function AdvancedAnalytics() {
   const [selectedTimeframe, setSelectedTimeframe] = useState('last_quarter')
   const [drillDownData, setDrillDownData] = useState<Record<string, unknown> | null>(null)
 
-  const handleDrillDown = (data: any) => {
+  const handleDrillDown = (data: Record<string, unknown>) => {
     setDrillDownData(data)
   }
 
@@ -194,7 +194,6 @@ export function AdvancedAnalytics() {
                 <Bar 
                   dataKey="count" 
                   fill="#3b82f6" 
-                  onClick={handleDrillDown}
                   className="cursor-pointer hover:opacity-80"
                 />
               </BarChart>
@@ -342,18 +341,18 @@ export function AdvancedAnalytics() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
           <Card className="w-full max-w-2xl max-h-[80vh] overflow-y-auto">
             <CardHeader>
-              <CardTitle>Drill-down Analysis: {drillDownData.stage}</CardTitle>
+              <CardTitle>Drill-down Analysis: {drillDownData.stage as string}</CardTitle>
               <CardDescription>Detailed breakdown and insights</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="text-center p-4 bg-muted rounded">
-                    <p className="text-2xl font-bold">{drillDownData.count}</p>
+                    <p className="text-2xl font-bold">{drillDownData.count as number}</p>
                     <p className="text-sm text-muted-foreground">Opportunities</p>
                   </div>
                   <div className="text-center p-4 bg-muted rounded">
-                    <p className="text-2xl font-bold">${(drillDownData.value / 1000).toFixed(0)}K</p>
+                    <p className="text-2xl font-bold">${((drillDownData.value as number) / 1000).toFixed(0)}K</p>
                     <p className="text-sm text-muted-foreground">Total Value</p>
                   </div>
                 </div>
@@ -361,8 +360,8 @@ export function AdvancedAnalytics() {
                 <div className="space-y-2">
                   <h4 className="font-medium">AI Insights:</h4>
                   <ul className="text-sm space-y-1 text-muted-foreground">
-                    <li>• Average time in stage: {drillDownData.avgDays} days</li>
-                    <li>• Conversion rate: {drillDownData.conversion}%</li>
+                    <li>• Average time in stage: {drillDownData.avgDays as number} days</li>
+                    <li>• Conversion rate: {drillDownData.conversion as number}%</li>
                     <li>• Recommended actions: Focus on MEDDPICC completion</li>
                     <li>• Risk factors: 3 opportunities over 30 days in stage</li>
                   </ul>

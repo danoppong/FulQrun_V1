@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useUser } from '@clerk/nextjs'
+import { useAuth } from '@/components/providers/auth-provider'
 import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label'
 import { Building2, Users, Target, CheckCircle, ArrowRight } from 'lucide-react'
 
 export default function OnboardingPage() {
-  const { user } = useUser()
+  const { user, isDemo } = useAuth()
   const router = useRouter()
   const [currentStep, setCurrentStep] = useState(1)
   const [isLoading, setIsLoading] = useState(false)

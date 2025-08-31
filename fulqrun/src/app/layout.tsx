@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { ClerkProvider } from '@clerk/nextjs';
+import { ConditionalClerkProvider } from '@/components/providers/clerk-provider';
+import { AuthProvider } from '@/components/providers/auth-provider';
 import { ThemeProvider } from '@/components/theme/theme-provider';
 import "./globals.css";
 
@@ -28,7 +29,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
+    <ConditionalClerkProvider>
       <html lang="en" suppressHydrationWarning>
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
@@ -37,10 +38,12 @@ export default function RootLayout({
             defaultTheme="light"
             storageKey="fulqrun-ui-theme"
           >
-            {children}
+            <AuthProvider>
+              {children}
+            </AuthProvider>
           </ThemeProvider>
         </body>
       </html>
-    </ClerkProvider>
+    </ConditionalClerkProvider>
   );
 }

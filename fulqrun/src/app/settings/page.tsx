@@ -22,6 +22,7 @@ import {
   Palette
 } from 'lucide-react'
 import { useTheme } from '@/components/theme/theme-provider'
+import { SystemStatus } from '@/components/debug/system-status'
 
 interface ScoringRule {
   id: string
@@ -118,6 +119,7 @@ export default function SettingsPage() {
     { id: 'integrations', label: 'Integrations', icon: Settings },
     { id: 'notifications', label: 'Notifications', icon: Bell },
     { id: 'appearance', label: 'Appearance', icon: Palette },
+    { id: 'system', label: 'System Status', icon: Database },
     { id: 'security', label: 'Security', icon: Shield }
   ]
 
@@ -641,6 +643,10 @@ export default function SettingsPage() {
                   </div>
                 </CardContent>
               </Card>
+            )}
+
+            {activeTab === 'system' && (
+              <SystemStatus />
             )}
 
             {activeTab === 'security' && (
