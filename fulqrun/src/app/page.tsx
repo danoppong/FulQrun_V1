@@ -1,15 +1,8 @@
-import { redirect } from 'next/navigation'
-import { currentUser } from '@clerk/nextjs/server'
 import { Button } from '@/components/ui/button'
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import Link from 'next/link'
 
-export default async function Home() {
-  const user = await currentUser()
-  
-  if (user) {
-    redirect('/dashboard')
-  }
+export default function Home() {
 
   return (
     <div className="min-h-screen bg-background">
@@ -25,14 +18,14 @@ export default async function Home() {
           </p>
           
           <div className="flex gap-4 justify-center mb-12">
-            <Link href="/sign-up">
+            <Link href="/demo">
               <Button size="lg" className="text-lg px-8 py-6">
-                Get Started
+                View Live Demo
               </Button>
             </Link>
-            <Link href="/sign-in">
+            <Link href="/sign-up">
               <Button variant="outline" size="lg" className="text-lg px-8 py-6">
-                Sign In
+                Get Started
               </Button>
             </Link>
           </div>
