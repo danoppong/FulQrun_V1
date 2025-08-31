@@ -37,10 +37,16 @@ export default async function Home() {
             </Link>
           </div>
           
-          <div className="text-center mb-8">
+          <div className="text-center mb-8 space-y-2">
             <Link href="/sign-in">
               <Button variant="ghost" className="text-sm">
                 Already have an account? Sign in
+              </Button>
+            </Link>
+            <br />
+            <Link href="/onboarding">
+              <Button variant="ghost" className="text-xs text-muted-foreground">
+                Test Onboarding Flow
               </Button>
             </Link>
           </div>

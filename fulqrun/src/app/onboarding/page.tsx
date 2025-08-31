@@ -14,6 +14,7 @@ export default function OnboardingPage() {
   const router = useRouter()
   const [currentStep, setCurrentStep] = useState(1)
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const [organizationData, setOrganizationData] = useState({
     name: '',
@@ -52,8 +53,36 @@ export default function OnboardingPage() {
 
   const handleComplete = async () => {
     setIsLoading(true)
+    setError(null)
+    
     try {
-      // Create organization and user profile
+      // Validate required fields
+      if (!organizationData.name.trim()) {
+        setError('Please enter an organization name')
+        setIsLoading(false)
+        return
+      }
+
+      console.log('Starting onboarding process...')
+      console.log('User:', user ? 'Authenticated' : 'Not authenticated')
+      console.log('Organization data:', organizationData)
+
+      // For demo mode or when no user, just redirect to dashboard
+      if (!user?.id) {
+        console.log('Demo mode - storing data locally and redirecting')
+        // Store demo data in localStorage for demo purposes
+        localStorage.setItem('fulqrun-demo-org', JSON.stringify(organizationData))
+        localStorage.setItem('fulqrun-demo-profile', JSON.stringify(userProfile))
+        localStorage.setItem('fulqrun-demo-preferences', JSON.stringify(preferences))
+        
+        // Add a small delay to show loading state
+        await new Promise(resolve => setTimeout(resolve, 1500))
+        router.push('/dashboard')
+        return
+      }
+
+      // Production mode - create real organization and user profile
+      console.log('Production mode - calling API')
       const response = await fetch('/api/onboarding', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -61,20 +90,27 @@ export default function OnboardingPage() {
           organization: organizationData,
           userProfile,
           preferences,
-          clerkUserId: user?.id,
-          email: user?.emailAddresses[0]?.emailAddress,
-          firstName: user?.firstName,
-          lastName: user?.lastName
+          clerkUserId: user.id,
+          email: user.emailAddresses[0]?.emailAddress,
+          firstName: user.firstName,
+          lastName: user.lastName
         })
       })
 
+      console.log('API response status:', response.status)
+
       if (response.ok) {
+        const result = await response.json()
+        console.log('Onboarding successful:', result)
         router.push('/dashboard')
       } else {
-        console.error('Onboarding failed')
+        const errorText = await response.text()
+        console.error('Onboarding failed:', errorText)
+        setError(`Setup failed: ${response.status} - ${errorText}`)
       }
     } catch (error) {
       console.error('Error during onboarding:', error)
+      setError('An error occurred during setup. Please check the console for details.')
     } finally {
       setIsLoading(false)
     }
@@ -126,6 +162,13 @@ export default function OnboardingPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
+            {/* Error Display */}
+            {error && (
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
+                <p className="text-sm text-red-800">{error}</p>
+              </div>
+            )}
+
             {currentStep === 1 && (
               <div className="space-y-4">
                 <h3 className="text-lg font-medium">Organization Information</h3>
@@ -342,12 +385,35 @@ export default function OnboardingPage() {
                   Next
                 </Button>
               ) : (
-                <Button
-                  onClick={handleComplete}
-                  disabled={isLoading}
-                >
-                  {isLoading ? 'Setting up...' : 'Complete Setup'}
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    onClick={handleComplete}
+                    disabled={isLoading}
+                    className="flex-1"
+                  >
+                    {isLoading ? 'Setting up...' : 'Complete Setup'}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      console.log('Debug - Current state:')
+                      console.log('User:', user)
+                      console.log('Organization:', organizationData)
+                      console.log('Profile:', userProfile)
+                      console.log('Preferences:', preferences)
+                    }}
+                    disabled={isLoading}
+                  >
+                    Debug
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    onClick={() => router.push('/dashboard')}
+                    disabled={isLoading}
+                  >
+                    Skip to Dashboard
+                  </Button>
+                </div>
               )}
             </div>
           </CardContent>
