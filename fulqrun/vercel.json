@@ -1,34 +1,12 @@
 {
   "framework": "nextjs",
   "buildCommand": "npm run build",
-  "devCommand": "npm run dev",
+  "devCommand": "npm run dev", 
   "installCommand": "npm install",
   "regions": ["iad1"],
   "functions": {
     "src/app/api/**/*.ts": {
       "maxDuration": 30
     }
-  },
-  "env": {
-    "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY": "pk_test_demo_key_for_preview",
-    "CLERK_SECRET_KEY": "sk_test_demo_key_for_preview",
-    "NEXT_PUBLIC_CLERK_SIGN_IN_URL": "/sign-in",
-    "NEXT_PUBLIC_CLERK_SIGN_UP_URL": "/sign-up", 
-    "NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL": "/dashboard",
-    "NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL": "/dashboard",
-    "NEXT_PUBLIC_APP_URL": "https://fulqrun-demo.vercel.app"
-  },
-  "redirects": [
-    {
-      "source": "/",
-      "has": [
-        {
-          "type": "cookie",
-          "key": "__session"
-        }
-      ],
-      "destination": "/dashboard",
-      "permanent": false
-    }
-  ]
+  }
 }
