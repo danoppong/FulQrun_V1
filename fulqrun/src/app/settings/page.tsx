@@ -18,8 +18,10 @@ import {
   Database,
   Save,
   Plus,
-  Trash2
+  Trash2,
+  Palette
 } from 'lucide-react'
+import { useTheme } from '@/components/theme/theme-provider'
 
 interface ScoringRule {
   id: string
@@ -33,6 +35,7 @@ interface ScoringRule {
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('organization')
   const [isLoading, setIsLoading] = useState(false)
+  const { theme, setTheme } = useTheme()
   
   // Organization settings
   const [orgSettings, setOrgSettings] = useState({
@@ -114,6 +117,7 @@ export default function SettingsPage() {
     { id: 'scoring', label: 'Lead Scoring', icon: Target },
     { id: 'integrations', label: 'Integrations', icon: Settings },
     { id: 'notifications', label: 'Notifications', icon: Bell },
+    { id: 'appearance', label: 'Appearance', icon: Palette },
     { id: 'security', label: 'Security', icon: Shield }
   ]
 
@@ -545,6 +549,94 @@ export default function SettingsPage() {
                         onChange={(e) => setNotificationSettings(prev => ({ ...prev, weeklyReports: e.target.checked }))}
                         className="h-4 w-4"
                       />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {activeTab === 'appearance' && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Appearance Settings</CardTitle>
+                  <CardDescription>
+                    Customize the look and feel of your FulQrun experience
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div>
+                    <h3 className="text-lg font-medium mb-4">Theme</h3>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between p-3 border rounded">
+                        <div>
+                          <p className="font-medium">Light Mode</p>
+                          <p className="text-sm text-muted-foreground">Clean, bright interface for daytime use</p>
+                        </div>
+                        <input
+                          type="radio"
+                          name="theme"
+                          checked={theme === 'light'}
+                          onChange={() => setTheme('light')}
+                          className="h-4 w-4"
+                        />
+                      </div>
+                      
+                      <div className="flex items-center justify-between p-3 border rounded">
+                        <div>
+                          <p className="font-medium">Dark Mode</p>
+                          <p className="text-sm text-muted-foreground">Easy on the eyes for low-light environments</p>
+                        </div>
+                        <input
+                          type="radio"
+                          name="theme"
+                          checked={theme === 'dark'}
+                          onChange={() => setTheme('dark')}
+                          className="h-4 w-4"
+                        />
+                      </div>
+                      
+                      <div className="flex items-center justify-between p-3 border rounded">
+                        <div>
+                          <p className="font-medium">System</p>
+                          <p className="text-sm text-muted-foreground">Automatically match your device settings</p>
+                        </div>
+                        <input
+                          type="radio"
+                          name="theme"
+                          checked={theme === 'system'}
+                          onChange={() => setTheme('system')}
+                          className="h-4 w-4"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 className="text-lg font-medium mb-4">Display Preferences</h3>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="font-medium">Compact View</p>
+                          <p className="text-sm text-muted-foreground">Show more information in less space</p>
+                        </div>
+                        <input type="checkbox" className="h-4 w-4" />
+                      </div>
+                      
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="font-medium">Show Animations</p>
+                          <p className="text-sm text-muted-foreground">Enable smooth transitions and animations</p>
+                        </div>
+                        <input type="checkbox" defaultChecked className="h-4 w-4" />
+                      </div>
+                      
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="font-medium">High Contrast</p>
+                          <p className="text-sm text-muted-foreground">Increase contrast for better readability</p>
+                        </div>
+                        <input type="checkbox" className="h-4 w-4" />
+                      </div>
                     </div>
                   </div>
                 </CardContent>

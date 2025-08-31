@@ -4,6 +4,7 @@ import { useUser, UserButton } from '@clerk/nextjs'
 import { Bell, User } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { GlobalSearch } from '@/components/search/global-search'
+import { ThemeToggle } from '@/components/theme/theme-toggle'
 import { usePathname } from 'next/navigation'
 
 export function Header() {
@@ -18,6 +19,7 @@ export function Header() {
       </div>
       
       <div className="flex items-center space-x-4">
+        <ThemeToggle />
         <Button variant="ghost" size="icon">
           <Bell className="h-4 w-4" />
         </Button>
