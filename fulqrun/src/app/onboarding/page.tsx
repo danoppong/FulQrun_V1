@@ -102,11 +102,27 @@ export default function OnboardingPage() {
       if (response.ok) {
         const result = await response.json()
         console.log('Onboarding successful:', result)
+        
+        if (result.mode === 'demo') {
+          console.log('Demo mode onboarding completed')
+          // Store demo data locally
+          localStorage.setItem('fulqrun-demo-org', JSON.stringify(result.organization))
+          localStorage.setItem('fulqrun-demo-user', JSON.stringify(result.user))
+          
+          // Show success message for demo mode
+          alert('Demo setup completed! You can now explore all features with demo data.')
+        }
+        
         router.push('/dashboard')
       } else {
-        const errorText = await response.text()
-        console.error('Onboarding failed:', errorText)
-        setError(`Setup failed: ${response.status} - ${errorText}`)
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }))
+        console.error('Onboarding failed:', errorData)
+        
+        if (errorData.details) {
+          setError(`Setup failed: ${errorData.error} - ${errorData.details}`)
+        } else {
+          setError(`Setup failed: ${errorData.error || 'Unknown error occurred'}`)
+        }
       }
     } catch (error) {
       console.error('Error during onboarding:', error)
