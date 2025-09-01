@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useAuth } from '@/components/providers/auth-provider'
+import { useSafeUser } from '@/hooks/use-safe-user'
 import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label'
 import { Building2, Users, Target, CheckCircle, ArrowRight } from 'lucide-react'
 
 export default function OnboardingPage() {
-  const { user, isDemo } = useAuth()
+  const { user, isDemo } = useSafeUser()
   const router = useRouter()
   const [currentStep, setCurrentStep] = useState(1)
   const [isLoading, setIsLoading] = useState(false)
@@ -68,7 +68,7 @@ export default function OnboardingPage() {
       console.log('Organization data:', organizationData)
 
       // For demo mode or when no user, just redirect to dashboard
-      if (!user?.id) {
+      if (!user || isDemo) {
         console.log('Demo mode - storing data locally and redirecting')
         // Store demo data in localStorage for demo purposes
         localStorage.setItem('fulqrun-demo-org', JSON.stringify(organizationData))
@@ -90,10 +90,10 @@ export default function OnboardingPage() {
           organization: organizationData,
           userProfile,
           preferences,
-          clerkUserId: user.id,
-          email: user.emailAddresses[0]?.emailAddress,
-          firstName: user.firstName,
-          lastName: user.lastName
+          clerkUserId: 'demo-user',
+          email: 'demo@example.com',
+          firstName: 'Demo',
+          lastName: 'User'
         })
       })
 

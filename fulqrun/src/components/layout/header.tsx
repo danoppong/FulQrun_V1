@@ -5,11 +5,11 @@ import { Bell, User } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { GlobalSearch } from '@/components/search/global-search'
 import { ThemeToggle } from '@/components/theme/theme-toggle'
-import { useAuth } from '@/components/providers/auth-provider'
+import { useSafeUser } from '@/hooks/use-safe-user'
 import { usePathname } from 'next/navigation'
 
 export function Header() {
-  const { isSignedIn, isDemo } = useAuth()
+  const { isSignedIn, isDemo } = useSafeUser()
   const pathname = usePathname()
   const isDemoMode = pathname?.startsWith('/demo') || isDemo
 
