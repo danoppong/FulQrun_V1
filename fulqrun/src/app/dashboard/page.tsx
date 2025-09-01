@@ -1,118 +1,87 @@
-import { redirect } from 'next/navigation'
-import { currentUser } from '@clerk/nextjs/server'
-import { createClient } from '@/lib/supabase/server'
 import { DashboardLayout } from '@/components/layout/dashboard-layout'
 import { RepDashboard } from '@/components/dashboards/rep-dashboard'
-import { ManagerDashboard } from '@/components/dashboards/manager-dashboard'
-import { AdminDashboard } from '@/components/dashboards/admin-dashboard'
+import { Button } from '@/components/ui/button'
+import Link from 'next/link'
 
-export default async function DashboardPage() {
-  const user = await currentUser()
-  
-  // Check if this is demo mode (no authentication)
-  if (!user) {
-    // Demo mode dashboard
-    return (
-      <DashboardLayout>
-        <div className="space-y-6">
-          {/* Demo Notice */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <h2 className="text-lg font-semibold text-blue-800">🎯 Demo Mode</h2>
-            <p className="text-sm text-blue-700">
-              You&apos;re viewing the demo version. All data is simulated for demonstration purposes.
-            </p>
+export default function DashboardPage() {
+  return (
+    <DashboardLayout>
+      <div className="space-y-6">
+        {/* Demo Notice */}
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <h2 className="text-lg font-semibold text-blue-800">🎯 FulQrun Demo</h2>
+          <p className="text-sm text-blue-700 mb-3">
+            You&apos;re viewing the complete sales operations platform with demo data. 
+            Explore all features including the new Phase 2 capabilities!
+          </p>
+          <div className="flex gap-2 flex-wrap">
+            <Link href="/leads">
+              <Button size="sm" variant="outline">View Leads</Button>
+            </Link>
+            <Link href="/opportunities">
+              <Button size="sm" variant="outline">View Opportunities</Button>
+            </Link>
+            <Link href="/pipeline">
+              <Button size="sm" variant="outline">Pipeline Builder</Button>
+            </Link>
+            <Link href="/ai-insights">
+              <Button size="sm" variant="outline">AI Insights</Button>
+            </Link>
+            <Link href="/integrations">
+              <Button size="sm" variant="outline">Integrations</Button>
+            </Link>
+            <Link href="/learning">
+              <Button size="sm" variant="outline">Learning Platform</Button>
+            </Link>
           </div>
-
-          {/* Welcome Header */}
-          <div>
-            <h1 className="text-3xl font-bold text-foreground">
-              Welcome to FulQrun!
-            </h1>
-            <p className="text-muted-foreground">
-              Demo Organization • Sales Rep • Demo Territory
-            </p>
-          </div>
-
-          {/* Demo Dashboard Content */}
-          <RepDashboard />
         </div>
-      </DashboardLayout>
-    )
-  }
 
-  // Production mode with authentication
-  try {
-    const supabase = await createClient()
-    
-    // Check if user exists in our database
-    const { data: dbUser, error } = await supabase
-      .from('users')
-      .select('*, organizations(*)')
-      .eq('clerk_id', user.id)
-      .single()
-
-    // If user doesn't exist or database error, redirect to onboarding
-    if (!dbUser || error) {
-      redirect('/onboarding')
-    }
-
-    const renderDashboard = () => {
-      switch (dbUser.role) {
-        case 'manager':
-          return <ManagerDashboard />
-        case 'admin':
-          return <AdminDashboard />
-        default:
-          return <RepDashboard />
-      }
-    }
-
-    return (
-      <DashboardLayout>
-        <div className="space-y-6">
-          {/* Welcome Header */}
-          <div>
-            <h1 className="text-3xl font-bold text-foreground">
-              Welcome back, {user.firstName}!
-            </h1>
-            <p className="text-muted-foreground">
-              {dbUser.organizations?.name} • {dbUser.role} • {dbUser.territory || 'No territory assigned'}
-            </p>
-          </div>
-
-          {/* Role-based Dashboard Content */}
-          {renderDashboard()}
+        {/* Welcome Header */}
+        <div>
+          <h1 className="text-3xl font-bold text-foreground">
+            Welcome to FulQrun!
+          </h1>
+          <p className="text-muted-foreground">
+            Demo Organization • Sales Representative • West Coast Territory
+          </p>
         </div>
-      </DashboardLayout>
-    )
-  } catch (error) {
-    console.error('Dashboard error:', error)
-    // Fallback to demo mode if database fails
-    return (
-      <DashboardLayout>
-        <div className="space-y-6">
-          {/* Database Error Notice */}
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-            <h2 className="text-lg font-semibold text-yellow-800">⚠️ Database Connection Issue</h2>
-            <p className="text-sm text-yellow-700">
-              Unable to connect to database. Running in demo mode with sample data.
-            </p>
-          </div>
 
-          {/* Welcome Header */}
-          <div>
-            <h1 className="text-3xl font-bold text-foreground">
-              Welcome, {user.firstName}!
-            </h1>
-            <p className="text-muted-foreground">
-              Demo Mode • Sales Representative
-            </p>
+        {/* Phase 2 Feature Highlights */}
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="p-4 border rounded-lg bg-gradient-to-br from-blue-50 to-blue-100">
+            <h3 className="font-semibold text-blue-800 mb-2">🔧 Advanced Pipeline Builder</h3>
+            <p className="text-sm text-blue-700">Drag-and-drop pipeline configuration with PEAK methodology integration</p>
           </div>
-
-          {/* Demo Dashboard Content */}
-          <RepDashboard />
+          
+          <div className="p-4 border rounded-lg bg-gradient-to-br from-purple-50 to-purple-100">
+            <h3 className="font-semibold text-purple-800 mb-2">🧠 AI-Driven Insights</h3>
+            <p className="text-sm text-purple-700">Predictive scoring, deal risk analysis, and next best action recommendations</p>
+          </div>
+          
+          <div className="p-4 border rounded-lg bg-gradient-to-br from-green-50 to-green-100">
+            <h3 className="font-semibold text-green-800 mb-2">🔗 Integration Hub</h3>
+            <p className="text-sm text-green-700">Connect Slack, DocuSign, Gong, Stripe and other sales tools</p>
+          </div>
+          
+          <div className="p-4 border rounded-lg bg-gradient-to-br from-orange-50 to-orange-100">
+            <h3 className="font-semibold text-orange-800 mb-2">🎓 Learning Platform</h3>
+            <p className="text-sm text-orange-700">PEAK and MEDDPICC certifications with micro-learning</p>
+          </div>
+          
+          <div className="p-4 border rounded-lg bg-gradient-to-br from-red-50 to-red-100">
+            <h3 className="font-semibold text-red-800 mb-2">📊 Advanced Analytics</h3>
+            <p className="text-sm text-red-700">Drill-down dashboards with team performance insights</p>
+          </div>
+          
+          <div className="p-4 border rounded-lg bg-gradient-to-br from-indigo-50 to-indigo-100">
+            <h3 className="font-semibold text-indigo-800 mb-2">🎨 Professional Themes</h3>
+            <p className="text-sm text-indigo-700">Light/dark mode with customizable appearance settings</p>
+          </div>
         </div>
-      </DashboardLayout>
-    )
-  }
+
+        {/* Demo Dashboard Content */}
+        <RepDashboard />
+      </div>
+    </DashboardLayout>
+  )
 }

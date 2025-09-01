@@ -1,170 +1,100 @@
-# FulQrun - Sales Operations Platform
+# FulQrun Demo - Sales Operations Platform
 
-A modern sales operations platform that embeds PEAK methodology and MEDDPICC qualification directly into your workflow.
+🎯 **This is the DEMO branch** - designed for feature exploration and demonstrations.
 
-## Features (MVP Phase 1)
+## ✨ What You're Seeing
 
-### Core Modules
-- **Authentication**: Clerk + Microsoft Entra ID SSO
-- **Opportunity Management**: PEAK stages + MEDDPICC qualification fields
-- **Lead Management**: Manual entry + basic scoring rules
-- **Contact & Company Management**: Light CRM functionality
-- **Basic Analytics**: Pipeline by stage, deal conversion rate
-- **Microsoft Graph Integration**: Emails, calendar sync (stubbed)
-- **QuickBooks Integration**: Invoicing with test accounts (stubbed)
-- **Role-based Dashboards**: Rep, manager, admin views
-- **Mobile-responsive PWA**: Progressive Web App features
+This demo showcases the complete FulQrun sales operations platform with:
 
-### PEAK Methodology
-- **Prospect**: Initial lead identification and qualification
-- **Engage**: Detailed needs analysis and relationship building
-- **Acquire**: Proposal, negotiation, and deal closure
-- **Keep**: Customer success and account expansion
+### 🚀 **Phase 1 + Phase 2 Features**
+- **Complete CRM**: Leads, opportunities, contacts, companies
+- **PEAK Methodology**: Prospect → Engage → Acquire → Keep workflows
+- **MEDDPICC Qualification**: Advanced opportunity qualification
+- **Advanced Pipeline Builder**: Drag-and-drop configuration
+- **AI-Driven Insights**: Predictive scoring and recommendations
+- **Integration Hub**: Slack, DocuSign, Gong, Stripe connections
+- **Learning Platform**: Training and certification programs
+- **Professional Themes**: Light/dark mode customization
 
-### MEDDPICC Qualification Framework
-- **Metrics**: Quantifiable business impact
-- **Economic Buyer**: Budget decision maker identification
-- **Decision Criteria**: Evaluation criteria mapping
-- **Decision Process**: Decision-making workflow
-- **Paper Process**: Legal and procurement requirements
-- **Identify Pain**: Business, technical, and personal pain points
-- **Champion**: Internal advocate development
-- **Competition**: Competitive landscape analysis
+### 📊 **Demo Data Included**
+- **156 qualified leads** with realistic scoring
+- **47 active opportunities** with MEDDPICC tracking
+- **342 contacts** with role identification
+- **89 companies** with relationship data
+- **Performance metrics** and analytics
+- **Activity timeline** with sample events
 
-## Tech Stack
+## 🎯 **Key Features to Explore**
 
-- **Frontend**: Next.js 15, React 19, TypeScript
-- **Styling**: TailwindCSS v4, shadcn/ui components
-- **Authentication**: Clerk with Microsoft Entra ID SSO
-- **Database**: Supabase with Row Level Security
-- **Deployment**: Vercel + Supabase
-- **Integrations**: Microsoft Graph API, QuickBooks API
+### **📱 Interactive Elements**
+- **Add Lead**: Click "Add Lead" to see real-time scoring
+- **Add Opportunity**: Test MEDDPICC qualification tracking
+- **Pipeline Builder**: Drag-and-drop stage configuration
+- **AI Insights**: View predictive recommendations
+- **Global Search**: Search across all demo data
+- **Theme Toggle**: Switch between light/dark modes
 
-## Setup Instructions
+### **🧠 AI-Enhanced Features**
+- **Predictive Lead Scoring**: AI-powered qualification
+- **Deal Risk Analysis**: Proactive risk identification
+- **Next Best Actions**: Context-aware recommendations
+- **Champion Detection**: Behavioral analysis insights
+- **Competitive Intelligence**: Strategic positioning
 
-### Prerequisites
-- Node.js 18+ 
-- npm or yarn
-- Clerk account
-- Supabase account
-- Microsoft Azure AD app registration
-- QuickBooks developer account
+### **🔗 Integration Showcase**
+- **Slack**: Team notification setup
+- **DocuSign**: Contract automation workflow
+- **Gong/Chorus**: Conversation intelligence integration
+- **Stripe**: Payment processing configuration
+- **Microsoft Graph**: Email/calendar sync options
 
-### Environment Variables
+### **🎓 Learning & Development**
+- **PEAK Methodology**: Complete training curriculum
+- **MEDDPICC Mastery**: Advanced qualification courses
+- **Micro-Learning**: Daily 5-minute lessons
+- **Certifications**: Industry-recognized credentials
+- **Team Leaderboards**: Gamified learning experience
 
-Create a `.env.local` file with the following variables:
+## 🎪 **Perfect for Demonstrations**
 
-```bash
-# Clerk Authentication
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key_here
-CLERK_SECRET_KEY=your_clerk_secret_key_here
-NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
-NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
-NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/dashboard
-NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/dashboard
+This demo is ideal for:
+- ✅ **Investor presentations** - Shows complete platform capabilities
+- ✅ **Customer demos** - Interactive feature exploration
+- ✅ **Team training** - Learn the interface and workflows
+- ✅ **Feature testing** - Try all functionality risk-free
+- ✅ **Mobile testing** - Responsive design showcase
 
-# Supabase
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url_here
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key_here
-SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key_here
+## 🚀 **Ready for Production?**
 
-# Microsoft Graph API
-MICROSOFT_CLIENT_ID=your_microsoft_client_id_here
-MICROSOFT_CLIENT_SECRET=your_microsoft_client_secret_here
-MICROSOFT_TENANT_ID=your_microsoft_tenant_id_here
+When you're ready to deploy for real business use:
+- **Main Branch**: Production-ready with real authentication and database
+- **Setup Time**: ~15 minutes with Clerk and Supabase
+- **Full Documentation**: Complete setup guides included
 
-# QuickBooks Integration
-QUICKBOOKS_CLIENT_ID=your_quickbooks_client_id_here
-QUICKBOOKS_CLIENT_SECRET=your_quickbooks_client_secret_here
-QUICKBOOKS_SANDBOX_BASE_URL=https://sandbox-quickbooks.api.intuit.com
+## 🎯 **Methodology-Driven Differentiators**
 
-# Application
-NEXT_PUBLIC_APP_URL=http://localhost:3000
-```
+FulQrun's unique advantages:
+- **Built-in PEAK Process**: Every workflow follows proven methodology
+- **Embedded MEDDPICC**: Qualification tracking with AI enhancement
+- **Sales-Ops Native**: Purpose-built for sales operations teams
+- **AI-Enhanced Guidance**: Smart recommendations based on methodology
+- **Integrated Learning**: Training platform embedded in daily workflow
 
-### Database Setup
+## 📱 **Explore the Demo**
 
-1. Create a new Supabase project
-2. Run the schema from `supabase/schema.sql` in your Supabase SQL editor
-3. Configure Row Level Security policies (included in schema)
+Navigate through all sections:
+- **Dashboard**: Role-based performance overview
+- **Leads**: Real-time scoring and qualification
+- **Opportunities**: MEDDPICC tracking and AI insights
+- **Pipeline Builder**: Visual workflow configuration
+- **AI Insights**: Predictive analytics and recommendations
+- **Integrations**: External tool connectivity
+- **Learning**: Training and certification platform
+- **Analytics**: Advanced performance tracking
+- **Settings**: Theme and configuration options
 
-### Authentication Setup
+**Experience the future of sales operations with FulQrun!** 🌟
 
-1. Create a Clerk application
-2. Configure Microsoft Entra ID as an OAuth provider in Clerk
-3. Add your domain to Clerk's allowed origins
+---
 
-### Development
-
-```bash
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-
-# Build for production
-npm run build
-
-# Start production server
-npm start
-```
-
-## Project Structure
-
-```
-src/
-├── app/                    # Next.js App Router pages
-│   ├── dashboard/         # Main dashboard
-│   ├── leads/            # Lead management
-│   ├── opportunities/    # Opportunity management
-│   ├── contacts/         # Contact management
-│   ├── companies/        # Company management
-│   ├── analytics/        # Analytics dashboard
-│   ├── performance/      # CSTPV performance tracking
-│   ├── sign-in/          # Authentication pages
-│   └── sign-up/
-├── components/
-│   ├── layout/           # Layout components
-│   └── ui/              # shadcn/ui components
-├── lib/
-│   ├── integrations/    # External service integrations
-│   ├── services/        # Business logic services
-│   ├── supabase/        # Database client setup
-│   └── types/           # TypeScript type definitions
-└── middleware.ts        # Clerk authentication middleware
-```
-
-## Development Roadmap
-
-### Phase 1: MVP (Current - 3-6 months)
-- ✅ Core application setup
-- 🔄 Basic CRUD operations
-- 📋 Microsoft Graph integration
-- 📋 QuickBooks integration
-- 📋 Lead scoring automation
-- 📋 MEDDPICC qualification tracking
-
-### Phase 2: v1.0 (6-12 months)
-- Advanced Pipeline Configurability
-- Full PEAK Process Integration
-- AI-driven insights and scoring
-- Integration Hub v1
-- Learning Platform
-- Enhanced Compliance
-
-### Phase 3: Enterprise Scale (12-24 months)
-- Hybrid Deployment Options
-- Customer Success Module
-- Advanced AI and Conversation Intelligence
-- Territory & Quota Management
-- Executive Command Center
-- Integration Hub v2
-
-## Contributing
-
-This project is built using Cursor + Claude for rapid development and iteration. Please follow the established patterns for PEAK methodology and MEDDPICC qualification tracking.
-
-## License
-
-Proprietary - FulQrun Sales Operations Platform
+*This demo represents the complete Phase 1 + Phase 2 implementation of FulQrun, showcasing enterprise-grade sales operations capabilities with methodology-driven workflows and AI-enhanced insights.*
