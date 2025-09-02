@@ -1,6 +1,7 @@
 import { DashboardLayout } from '@/components/layout/dashboard-layout'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Target, Clock, Award } from 'lucide-react'
+import { Leaderboards } from '@/components/gamification/leaderboards'
+import { Target, Clock, Award, Trophy } from 'lucide-react'
 
 // Mock data for CSTPV performance tracking
 const cstpvMetrics = {
@@ -268,6 +269,15 @@ export default function PerformancePage() {
               </div>
             </CardContent>
           </Card>
+        </div>
+
+        {/* Gamification Section */}
+        <div className="border-t pt-6">
+          <div className="flex items-center gap-2 mb-6">
+            <Trophy className="h-6 w-6 text-yellow-600" />
+            <h2 className="text-2xl font-bold">Team Competition & Recognition</h2>
+          </div>
+          <Leaderboards />
         </div>
       </div>
     </DashboardLayout>

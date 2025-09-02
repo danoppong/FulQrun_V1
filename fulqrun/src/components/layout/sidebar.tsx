@@ -17,7 +17,11 @@ import {
   GitBranch,
   Brain,
   Zap,
-  GraduationCap
+  GraduationCap,
+  Crown,
+  Map,
+  Heart,
+  Mic
 } from 'lucide-react'
 
 const navigation = [
@@ -27,6 +31,9 @@ const navigation = [
   { name: 'Pipeline Builder', href: '/pipeline', icon: GitBranch },
   { name: 'Contacts', href: '/contacts', icon: Contact },
   { name: 'Companies', href: '/companies', icon: Building2 },
+  { name: 'Customer Success', href: '/customer-success', icon: Heart },
+  { name: 'Territory & Quota', href: '/territory', icon: Map },
+  { name: 'Executive Center', href: '/executive', icon: Crown },
   { name: 'Analytics', href: '/analytics', icon: BarChart3 },
   { name: 'AI Insights', href: '/ai-insights', icon: Brain },
   { name: 'Performance', href: '/performance', icon: TrendingUp },
