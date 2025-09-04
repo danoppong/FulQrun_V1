@@ -20,8 +20,9 @@ export default async function Home() {
         redirect('/dashboard')
       }
     } catch (error) {
-      // If Clerk fails, continue to demo mode
-      console.log('Clerk not configured, running in demo mode')
+      // If Clerk fails, redirect to demo dashboard for better UX
+      console.log('Clerk authentication failed, redirecting to demo dashboard')
+      redirect('/demo-dashboard')
     }
   }
 

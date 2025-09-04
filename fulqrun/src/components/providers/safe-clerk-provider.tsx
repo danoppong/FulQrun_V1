@@ -24,7 +24,13 @@ export function SafeClerkProvider({ children }: SafeClerkProviderProps) {
 
   // Production mode - with Clerk provider
   return (
-    <ClerkProvider publishableKey={publishableKey}>
+    <ClerkProvider 
+      publishableKey={publishableKey}
+      signInUrl="/sign-in"
+      signUpUrl="/sign-up"
+      afterSignInUrl="/dashboard"
+      afterSignUpUrl="/dashboard"
+    >
       {children}
     </ClerkProvider>
   )
