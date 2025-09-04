@@ -5,10 +5,24 @@ import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/ca
 import Link from 'next/link'
 
 export default async function Home() {
-  const user = await currentUser()
-  
-  if (user) {
-    redirect('/dashboard')
+  // Check if we're in demo mode (no Clerk keys)
+  const hasValidClerkKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY && 
+    process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY !== 'your_clerk_publishable_key_here' &&
+    process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY !== 'pk_test_demo_development_key' &&
+    !process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY.includes('demo') &&
+    process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY.length > 20
+
+  // Only check for user if we have valid Clerk configuration
+  if (hasValidClerkKey) {
+    try {
+      const user = await currentUser()
+      if (user) {
+        redirect('/dashboard')
+      }
+    } catch (error) {
+      // If Clerk fails, continue to demo mode
+      console.log('Clerk not configured, running in demo mode')
+    }
   }
 
   return (

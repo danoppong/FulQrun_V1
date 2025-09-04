@@ -1,5 +1,6 @@
 // AI-driven insights service for predictive scoring and recommendations
-// Phase 2 implementation with OpenAI/Anthropic integration
+// Phase 2 implementation with Claude AI integration
+import { getClaudeService } from './claude-ai'
 
 export interface AIInsight {
   type: 'lead_score' | 'deal_risk' | 'next_action' | 'champion_detection' | 'competitive_analysis'
@@ -60,119 +61,191 @@ export class AIInsightsService {
   // Enhanced Lead Scoring with AI
   static async generateLeadScoringAI(leadData: Record<string, unknown>): Promise<LeadScoringAI> {
     try {
-      // In production, this would call OpenAI/Anthropic API
-      // For now, return intelligent mock analysis
+      // Use Claude AI for intelligent lead scoring
+      const claudeService = getClaudeService()
+      const response = await claudeService.analyzeLead(leadData)
       
-      const baseScore = this.calculateBaseScore(leadData)
-      const aiEnhancements = this.generateAIEnhancements(leadData)
+      if (response.error) {
+        console.error('Claude AI Lead Scoring error:', response.error)
+        // Fallback to basic scoring
+        return this.getFallbackLeadScoring(leadData)
+      }
+      
+      // Parse Claude's JSON response
+      const analysis = JSON.parse(response.content)
       
       return {
-        predictedScore: Math.min(baseScore + aiEnhancements.boost, 100),
-        confidenceLevel: 85,
-        scoringFactors: [
-          {
-            factor: 'Job Title Analysis',
-            impact: this.analyzeTitleImpact(leadData.title as string),
-            reasoning: `Title "${leadData.title}" indicates ${this.getTitleReasoning(leadData.title as string)}`
-          },
-          {
-            factor: 'Company Size Correlation',
-            impact: this.analyzeCompanySize(leadData.company_employees as number),
-            reasoning: `Company size suggests ${this.getCompanySizeReasoning(leadData.company_employees as number)}`
-          },
-          {
-            factor: 'Industry Fit',
-            impact: 15,
-            reasoning: 'Industry shows strong alignment with our ideal customer profile'
-          }
-        ],
-        recommendations: this.generateLeadRecommendations(leadData, baseScore + aiEnhancements.boost)
+        predictedScore: analysis.predictedScore || 50,
+        confidenceLevel: analysis.confidenceLevel || 70,
+        scoringFactors: analysis.scoringFactors || [],
+        recommendations: analysis.recommendations || ['Contact lead for initial qualification']
       }
     } catch (error) {
       console.error('AI Lead Scoring error:', error)
       // Fallback to basic scoring
-      return {
-        predictedScore: 50,
-        confidenceLevel: 60,
-        scoringFactors: [],
-        recommendations: ['Contact lead for initial qualification']
-      }
+      return this.getFallbackLeadScoring(leadData)
+    }
+  }
+
+  // Fallback lead scoring when Claude is unavailable
+  private static getFallbackLeadScoring(leadData: Record<string, unknown>): LeadScoringAI {
+    const baseScore = this.calculateBaseScore(leadData)
+    const aiEnhancements = this.generateAIEnhancements(leadData)
+    
+    return {
+      predictedScore: Math.min(baseScore + aiEnhancements.boost, 100),
+      confidenceLevel: 60,
+      scoringFactors: [
+        {
+          factor: 'Job Title Analysis',
+          impact: this.analyzeTitleImpact(leadData.title as string),
+          reasoning: `Title "${leadData.title}" indicates ${this.getTitleReasoning(leadData.title as string)}`
+        },
+        {
+          factor: 'Company Size Correlation',
+          impact: this.analyzeCompanySize(leadData.company_employees as number),
+          reasoning: `Company size suggests ${this.getCompanySizeReasoning(leadData.company_employees as number)}`
+        },
+        {
+          factor: 'Industry Fit',
+          impact: 15,
+          reasoning: 'Industry shows strong alignment with our ideal customer profile'
+        }
+      ],
+      recommendations: this.generateLeadRecommendations(leadData, baseScore + aiEnhancements.boost)
     }
   }
 
   // Deal Risk Analysis with AI
   static async analyzeDealRisk(opportunityData: Record<string, unknown>): Promise<DealRiskAnalysis> {
     try {
-      const riskFactors = this.identifyRiskFactors(opportunityData)
-      const riskScore = this.calculateRiskScore(riskFactors)
+      // Use Claude AI for intelligent deal risk analysis
+      const claudeService = getClaudeService()
+      const response = await claudeService.analyzeDealRisk(opportunityData)
+      
+      if (response.error) {
+        console.error('Claude AI Deal Risk Analysis error:', response.error)
+        // Fallback to basic analysis
+        return this.getFallbackDealRiskAnalysis(opportunityData)
+      }
+      
+      // Parse Claude's JSON response
+      const analysis = JSON.parse(response.content)
       
       return {
-        riskLevel: this.getRiskLevel(riskScore),
-        riskScore,
-        riskFactors,
-        recommendations: this.generateRiskMitigation(riskFactors),
-        timeToClose: this.predictTimeToClose(opportunityData)
+        riskLevel: analysis.riskLevel || 'medium',
+        riskScore: analysis.riskScore || 50,
+        riskFactors: analysis.riskFactors || [],
+        recommendations: analysis.recommendations || ['Continue standard qualification process'],
+        timeToClose: analysis.timeToClose || 30
       }
     } catch (error) {
       console.error('AI Deal Risk Analysis error:', error)
-      return {
-        riskLevel: 'medium',
-        riskScore: 50,
-        riskFactors: [],
-        recommendations: ['Continue standard qualification process'],
-        timeToClose: 30
-      }
+      // Fallback to basic analysis
+      return this.getFallbackDealRiskAnalysis(opportunityData)
+    }
+  }
+
+  // Fallback deal risk analysis when Claude is unavailable
+  private static getFallbackDealRiskAnalysis(opportunityData: Record<string, unknown>): DealRiskAnalysis {
+    const riskFactors = this.identifyRiskFactors(opportunityData)
+    const riskScore = this.calculateRiskScore(riskFactors)
+    
+    return {
+      riskLevel: this.getRiskLevel(riskScore),
+      riskScore,
+      riskFactors,
+      recommendations: this.generateRiskMitigation(riskFactors),
+      timeToClose: this.predictTimeToClose(opportunityData)
     }
   }
 
   // Next Best Action AI Recommendations
   static async getNextBestAction(contextData: Record<string, unknown>): Promise<NextBestAction> {
     try {
-      const action = this.determineOptimalAction(contextData)
+      // Use Claude AI for intelligent next best action recommendations
+      const claudeService = getClaudeService()
+      const response = await claudeService.getNextBestAction(contextData)
+      
+      if (response.error) {
+        console.error('Claude AI Next Best Action error:', response.error)
+        // Fallback to basic analysis
+        return this.getFallbackNextBestAction(contextData)
+      }
+      
+      // Parse Claude's JSON response
+      const analysis = JSON.parse(response.content)
       
       return {
-        action: action.description,
-        priority: action.priority,
-        reasoning: action.reasoning,
-        expectedOutcome: action.outcome,
-        timeEstimate: action.timeEstimate,
-        resources: action.resources
+        action: analysis.action || 'Continue current sales process',
+        priority: analysis.priority || 'medium',
+        reasoning: analysis.reasoning || 'Standard follow-up recommended',
+        expectedOutcome: analysis.expectedOutcome || 'Maintain engagement',
+        timeEstimate: analysis.timeEstimate || '1-2 days',
+        resources: analysis.resources || ['Email template', 'Call script']
       }
     } catch (error) {
       console.error('AI Next Best Action error:', error)
-      return {
-        action: 'Continue current sales process',
-        priority: 'medium',
-        reasoning: 'Standard follow-up recommended',
-        expectedOutcome: 'Maintain engagement',
-        timeEstimate: '1-2 days',
-        resources: ['Email template', 'Call script']
-      }
+      // Fallback to basic analysis
+      return this.getFallbackNextBestAction(contextData)
+    }
+  }
+
+  // Fallback next best action when Claude is unavailable
+  private static getFallbackNextBestAction(contextData: Record<string, unknown>): NextBestAction {
+    const action = this.determineOptimalAction(contextData)
+    
+    return {
+      action: action.description,
+      priority: action.priority,
+      reasoning: action.reasoning,
+      expectedOutcome: action.outcome,
+      timeEstimate: action.timeEstimate,
+      resources: action.resources
     }
   }
 
   // Champion Detection AI
   static async detectChampions(contactsData: Array<Record<string, unknown>>): Promise<ChampionDetection> {
     try {
-      const potentialChampions = contactsData.map(contact => ({
-        contactId: contact.id as string,
-        name: `${contact.first_name} ${contact.last_name}`,
-        championScore: this.calculateChampionScore(contact),
-        indicators: this.getChampionIndicators(contact),
-        engagementLevel: this.getEngagementLevel(contact),
-        influence: this.getInfluenceLevel(contact)
-      }))
-
+      // Use Claude AI for intelligent champion detection
+      const claudeService = getClaudeService()
+      const response = await claudeService.detectChampions(contactsData)
+      
+      if (response.error) {
+        console.error('Claude AI Champion Detection error:', response.error)
+        // Fallback to basic analysis
+        return this.getFallbackChampionDetection(contactsData)
+      }
+      
+      // Parse Claude's JSON response
+      const analysis = JSON.parse(response.content)
+      
       return {
-        potentialChampions: potentialChampions.filter(c => c.championScore > 60),
-        recommendations: this.generateChampionRecommendations(potentialChampions)
+        potentialChampions: analysis.potentialChampions || [],
+        recommendations: analysis.recommendations || ['Identify key stakeholders for champion development']
       }
     } catch (error) {
       console.error('AI Champion Detection error:', error)
-      return {
-        potentialChampions: [],
-        recommendations: ['Identify key stakeholders for champion development']
-      }
+      // Fallback to basic analysis
+      return this.getFallbackChampionDetection(contactsData)
+    }
+  }
+
+  // Fallback champion detection when Claude is unavailable
+  private static getFallbackChampionDetection(contactsData: Array<Record<string, unknown>>): ChampionDetection {
+    const potentialChampions = contactsData.map(contact => ({
+      contactId: contact.id as string,
+      name: `${contact.first_name} ${contact.last_name}`,
+      championScore: this.calculateChampionScore(contact),
+      indicators: this.getChampionIndicators(contact),
+      engagementLevel: this.getEngagementLevel(contact),
+      influence: this.getInfluenceLevel(contact)
+    }))
+
+    return {
+      potentialChampions: potentialChampions.filter(c => c.championScore > 60),
+      recommendations: this.generateChampionRecommendations(potentialChampions)
     }
   }
 
