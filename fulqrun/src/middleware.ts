@@ -20,19 +20,17 @@ const hasValidClerkKeys = () => {
     publishableKey.length > 20
 }
 
-export default async function middleware(req: Request) {
+export default clerkMiddleware(async (auth, req) => {
   // If no valid Clerk keys, allow all routes in demo mode
   if (!hasValidClerkKeys()) {
     return NextResponse.next()
   }
 
-  // Use Clerk middleware only if we have valid keys
-  return clerkMiddleware((auth, req) => {
-    if (!isPublicRoute(req)) {
-      auth.protect()
-    }
-  })(req)
-}
+  // Use Clerk authentication only if we have valid keys
+  if (!isPublicRoute(req)) {
+    await auth.protect()
+  }
+})
 
 export const config = {
   matcher: [
