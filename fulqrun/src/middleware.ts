@@ -1,4 +1,5 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
+import { NextResponse } from 'next/server'
 
 const isPublicRoute = createRouteMatcher([
   '/',
@@ -9,11 +10,29 @@ const isPublicRoute = createRouteMatcher([
   '/sign-up(.*)',
 ])
 
-export default clerkMiddleware(async (auth, req) => {
-  if (!isPublicRoute(req)) {
-    await auth.protect()
+// Check if we have valid Clerk keys
+const hasValidClerkKeys = () => {
+  const publishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+  return publishableKey && 
+    publishableKey !== 'your_clerk_publishable_key_here' &&
+    publishableKey !== 'pk_test_demo_development_key' &&
+    !publishableKey.includes('demo') &&
+    publishableKey.length > 20
+}
+
+export default async function middleware(req: any) {
+  // If no valid Clerk keys, allow all routes in demo mode
+  if (!hasValidClerkKeys()) {
+    return NextResponse.next()
   }
-})
+
+  // Use Clerk middleware only if we have valid keys
+  return clerkMiddleware(async (auth, req) => {
+    if (!isPublicRoute(req)) {
+      await auth.protect()
+    }
+  })(req)
+}
 
 export const config = {
   matcher: [
