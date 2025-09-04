@@ -20,9 +20,8 @@ export default async function Home() {
         redirect('/dashboard')
       }
     } catch (error) {
-      // If Clerk fails, redirect to demo dashboard for better UX
-      console.log('Clerk authentication failed, redirecting to demo dashboard')
-      redirect('/demo-dashboard')
+      // If Clerk fails, show the landing page instead of redirecting
+      console.log('Clerk authentication not available, showing landing page')
     }
   }
 

@@ -1,12 +1,14 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useUser } from '@clerk/nextjs'
 
 export function useSafeUser() {
+  const { user, isLoaded } = useUser()
   const [safeData, setSafeData] = useState({
     isSignedIn: false,
     user: null,
-    isLoaded: true,
+    isLoaded: false,
     isDemo: true
   })
 
@@ -22,7 +24,7 @@ export function useSafeUser() {
       publishableKey.length > 20
 
     if (!hasValidKey) {
-      // Demo mode
+      // Demo mode - no valid Clerk key
       setSafeData({
         isSignedIn: false,
         user: null,
@@ -30,16 +32,15 @@ export function useSafeUser() {
         isDemo: true
       })
     } else {
-      // In production, we would use real Clerk data
-      // For now, return demo data to avoid hook violations
+      // Production mode - use real Clerk data
       setSafeData({
-        isSignedIn: false,
-        user: null,
-        isLoaded: true,
-        isDemo: true
+        isSignedIn: !!user,
+        user: user,
+        isLoaded: isLoaded,
+        isDemo: false
       })
     }
-  }, [])
+  }, [user, isLoaded])
 
   return safeData
 }
