@@ -27,9 +27,9 @@ export default async function middleware(req: Request) {
   }
 
   // Use Clerk middleware only if we have valid keys
-  return clerkMiddleware(async (auth, req) => {
+  return clerkMiddleware((auth, req) => {
     if (!isPublicRoute(req)) {
-      await auth.protect()
+      auth.protect()
     }
   })(req)
 }
