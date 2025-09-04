@@ -57,7 +57,7 @@ export default function Page() {
               <Link href="/demo-dashboard">Sign In (Demo)</Link>
             </Button>
             <div className="text-center text-sm text-muted-foreground">
-              Don't have an account?{' '}
+              Don&apos;t have an account?{' '}
               <Link href="/sign-up" className="underline">
                 Sign up
               </Link>
