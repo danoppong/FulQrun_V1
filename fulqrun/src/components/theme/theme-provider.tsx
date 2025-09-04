@@ -30,8 +30,11 @@ export function ThemeProvider({
   ...props
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(defaultTheme)
+  const [mounted, setMounted] = useState(false)
 
+  // Ensure component is mounted before accessing localStorage
   useEffect(() => {
+    setMounted(true)
     const storedTheme = localStorage.getItem(storageKey) as Theme
     if (storedTheme) {
       setTheme(storedTheme)
@@ -39,6 +42,8 @@ export function ThemeProvider({
   }, [storageKey])
 
   useEffect(() => {
+    if (!mounted) return
+
     const root = window.document.documentElement
 
     root.classList.remove('light', 'dark')
@@ -54,7 +59,7 @@ export function ThemeProvider({
     }
 
     root.classList.add(theme)
-  }, [theme])
+  }, [theme, mounted])
 
   const value = {
     theme,
@@ -62,6 +67,11 @@ export function ThemeProvider({
       localStorage.setItem(storageKey, theme)
       setTheme(theme)
     },
+  }
+
+  // Prevent hydration mismatch by not rendering until mounted
+  if (!mounted) {
+    return <>{children}</>
   }
 
   return (

@@ -18,7 +18,12 @@ export const metadata: Metadata = {
   title: "FulQrun - Sales Operations Platform",
   description: "PEAK + MEDDPICC embedded sales operations platform",
   manifest: "/manifest.json",
-  viewport: "width=device-width, initial-scale=1, maximum-scale=1",
+};
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
   themeColor: "#3b82f6",
 };
 
@@ -32,6 +37,7 @@ export default function RootLayout({
       <html lang="en" suppressHydrationWarning>
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
+          suppressHydrationWarning={true}
         >
           <ThemeProvider
             defaultTheme="light"
