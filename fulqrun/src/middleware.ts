@@ -20,7 +20,7 @@ const hasValidClerkKeys = () => {
     publishableKey.length > 20
 }
 
-export default async function middleware(req: any) {
+export default async function middleware(req: Request) {
   // If no valid Clerk keys, allow all routes in demo mode
   if (!hasValidClerkKeys()) {
     return NextResponse.next()
