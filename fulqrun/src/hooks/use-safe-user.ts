@@ -7,7 +7,7 @@ export function useSafeUser() {
   const { user, isLoaded } = useUser()
   const [safeData, setSafeData] = useState({
     isSignedIn: false,
-    user: null as any,
+    user: null as unknown,
     isLoaded: false,
     isDemo: true
   })
