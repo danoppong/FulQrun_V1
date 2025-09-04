@@ -8,6 +8,7 @@ const isPublicRoute = createRouteMatcher([
   '/preview',
   '/sign-in(.*)',
   '/sign-up(.*)',
+  '/api/health(.*)',
 ])
 
 // Check if we have valid Clerk keys

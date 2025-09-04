@@ -39,41 +39,39 @@ export function SystemStatus() {
     }
 
     // Check Supabase Configuration
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-    if (!supabaseUrl || supabaseUrl.includes('your_supabase') || supabaseUrl.includes('demo')) {
-      newChecks.push({
-        name: 'Supabase Database',
-        status: 'warning',
-        message: 'Demo mode - Database not configured',
-        details: 'Set NEXT_PUBLIC_SUPABASE_URL for production'
-      })
-    } else {
-      // Test database connection
-      try {
-        const response = await fetch('/api/health/database')
-        if (response.ok) {
-          newChecks.push({
-            name: 'Supabase Database',
-            status: 'success',
-            message: 'Connected and operational',
-            details: `Database URL: ${supabaseUrl}`
-          })
-        } else {
-          newChecks.push({
-            name: 'Supabase Database',
-            status: 'error',
-            message: 'Connection failed',
-            details: 'Check database credentials and network'
-          })
-        }
-      } catch (error) {
+    try {
+      const response = await fetch('/api/health/database')
+      const data = await response.json()
+      
+      if (data.status === 'success') {
+        newChecks.push({
+          name: 'Supabase Database',
+          status: 'success',
+          message: 'Connected and operational',
+          details: `Database URL: ${data.url}`
+        })
+      } else if (data.status === 'demo') {
+        newChecks.push({
+          name: 'Supabase Database',
+          status: 'warning',
+          message: 'Demo mode - Database not configured',
+          details: 'Set NEXT_PUBLIC_SUPABASE_URL for production'
+        })
+      } else {
         newChecks.push({
           name: 'Supabase Database',
           status: 'error',
-          message: 'Connection test failed',
-          details: 'Unable to reach database endpoint'
+          message: data.message || 'Connection failed',
+          details: data.error || 'Check database credentials and network'
         })
       }
+    } catch (error) {
+      newChecks.push({
+        name: 'Supabase Database',
+        status: 'error',
+        message: 'Connection test failed',
+        details: 'Unable to reach database endpoint'
+      })
     }
 
     // Check Microsoft Graph
