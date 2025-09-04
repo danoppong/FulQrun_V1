@@ -9,6 +9,7 @@ const isPublicRoute = createRouteMatcher([
   '/sign-in(.*)',
   '/sign-up(.*)',
   '/api/health(.*)',
+  '/api/debug(.*)',
 ])
 
 // Check if we have valid Clerk keys
@@ -24,6 +25,11 @@ const hasValidClerkKeys = () => {
 export default clerkMiddleware(async (auth, req) => {
   // If no valid Clerk keys, allow all routes in demo mode
   if (!hasValidClerkKeys()) {
+    return NextResponse.next()
+  }
+
+  // Skip API routes - let them handle their own authentication
+  if (req.nextUrl.pathname.startsWith('/api/')) {
     return NextResponse.next()
   }
 
