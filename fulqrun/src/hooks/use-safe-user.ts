@@ -1,13 +1,13 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useUser } from '@clerk/nextjs'
+import { useUser, UserResource } from '@clerk/nextjs'
 
 export function useSafeUser() {
   const { user, isLoaded } = useUser()
   const [safeData, setSafeData] = useState({
     isSignedIn: false,
-    user: null as any,
+    user: null as UserResource | null,
     isLoaded: false,
     isDemo: true
   })
